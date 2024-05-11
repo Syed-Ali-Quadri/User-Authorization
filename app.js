@@ -8,8 +8,18 @@ app.set("view engine", "ejs");
 app.use(express.json());
 app.use(express.static(path.join(__dirname, "public")));
 
+// Login Route & Post
 app.get("/", (req, res) =>{
     res.render("login");
+});
+
+// Register Route & Post
+app.get("/register", (req, res) =>{
+    res.render("register");
+});
+// Profile Route
+app.get("/profile", (req, res) =>{
+    res.render("profile");
 });
 
 app.listen(port, ()=>{
