@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 const path = require("path");
 const port = 3000;
+const userModel = require("./model/usermodel");
 
 app.set("view engine", "ejs");
 app.use(express.json());
