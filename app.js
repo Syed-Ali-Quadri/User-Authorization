@@ -4,11 +4,17 @@ const app = express();
 const path = require("path");
 const port = 3000;
 const userModel = require("./model/usermodel");
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+const { hash } = require("crypto");
+const cookieParser = require("cookie-parser");
 
 // Setting up ExpressJS
 app.set("view engine", "ejs");
 app.use(express.json());
+app.use(express.urlencoded({extended: true}));
 app.use(express.static(path.join(__dirname, "public")));
+app.use(cookieParser());
 
 // Login Route & Post
 app.get("/", (req, res) =>{
@@ -19,6 +25,28 @@ app.get("/", (req, res) =>{
 app.get("/register", (req, res) =>{
     res.render("register");
 });
+
+app.post("/create", (req, res) =>{
+    let {email, password, name, username} = req.body;
+
+    bcrypt.genSalt(10, (err, salt) =>{
+        bcrypt.hash(password, salt , async (err, hash) =>{
+            let createdUser = await userModel.create({
+                name,
+                username,
+                email,
+                password: hash
+            });
+
+            let token = jwt.sign({email}, "secret")
+            res.cookie("token", token);
+            res.redirect('/profile');
+        })
+    })
+
+
+   
+})
 
 // Profile Route
 app.get("/profile", (req, res) =>{
