@@ -43,9 +43,6 @@ app.post("/create", (req, res) =>{
             res.redirect('/profile');
         })
     })
-
-
-   
 })
 
 // Profile Route
