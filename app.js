@@ -21,6 +21,24 @@ app.get("/", (req, res) =>{
     res.render("login");
 });
 
+app.post("/login", (req, res) =>{
+    let {email, password} = req.body;
+
+    let findUser = userModel.findOne({email});
+
+    if(!findUser) res.send("User not found")
+
+    bcrypt.compare(password, findUser.password, (err, result) =>{
+        if(result) {
+            res.redirect('/profile');
+
+            let token = jwt.sign({email}, "secret");
+            res.cookie("token", token);
+
+        }   else return res.redirect('/profile');
+    })
+});
+
 // Register Route & Post
 app.get("/register", (req, res) =>{
     res.render("register");
