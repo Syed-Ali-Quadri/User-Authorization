@@ -21,22 +21,20 @@ app.get("/", (req, res) =>{
     res.render("login");
 });
 
-app.post("/login", (req, res) =>{ 
-    let {email, password} = req.body;
+app.post("/login", async (req, res) =>{ 
 
-    let findUser = userModel.findOne({email});
+    let findUser = await userModel.findOne({email: req.body.email});
 
-    if(!findUser) res.send("User not found")
+    if(findUser) {
 
-    bcrypt.compare(password, findUser.password, (err, result) =>{
-        if(result) {
-            res.redirect('/profile');
-
-            let token = jwt.sign({email}, "secret");
-            res.cookie("token", token);
-
-        }   else return res.redirect('/profile');
-    })
+        bcrypt.compare(req.body.password, findUser.password, (err, result) =>{
+            if(result) {
+                let token = jwt.sign({email: req.body.email}, "secret");
+                res.cookie("token", token);
+                res.redirect('/profile');
+            } else res.send("Something went wrong")
+        })
+    } else res.send("Something went wrong")
 });
 
 // Register Route & Post
@@ -64,9 +62,30 @@ app.post("/create", (req, res) =>{
 })
 
 // Profile Route
-app.get("/profile", (req, res) =>{
+app.get("/profile", isLoggedIn, (req, res) =>{
     res.render("profile");
 });
+
+// Logout Post
+app.get("/logout", (req, res) =>{
+    res.clearCookie("token");
+    res.redirect("/");
+});
+
+// Middleware route (Protected route)
+function isLoggedIn(req, res, next) {
+    if(!req.cookies.token) {
+        res.redirect('/');
+    } else {
+        try{
+            let data = jwt.verify(req.cookies.token, "secret")
+            next();
+        }
+        catch {
+            return res.redirect("/");
+        }
+    }
+}
 
 // Running Port
 app.listen(port, ()=>{
