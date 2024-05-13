@@ -21,7 +21,7 @@ app.get("/", (req, res) =>{
     res.render("login");
 });
 
-app.post("/login", async (req, res) =>{ 
+app.post("/login", async (req, res) =>{
 
     let findUser = await userModel.findOne({email: req.body.email});
 
