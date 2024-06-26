@@ -17,10 +17,10 @@ This repository provides a simple authentication system using Node.js, Express.j
 
 ## Usage
 
-Navigate to `http://localhost:3000/register` to create a new user account.
-After registration, you can log in at `http://localhost:3000/` with your credentials.
-Access `http://localhost:3000/profile` after logging in to view the profile page.
-Click on `Logout` to clear the session cookie and log out.
+- Navigate to `http://localhost:3000/register` to create a new user account.
+- After registration, you can log in at `http://localhost:3000/` with your credentials.
+- Access `http://localhost:3000/profile` after logging in to view the profile page.
+- Click on `Logout` to clear the session cookie and log out.
 
 ## License
 
